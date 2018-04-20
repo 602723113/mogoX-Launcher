@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.to2mbn.jmccc.option.JavaEnvironment;
@@ -29,6 +30,8 @@ public class Main extends Application {
         // 标题栏设置
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         Scene scene = new Scene(root, 638, 400);
+        // 为了使用css圆角, 所以背景需要透明色
+        scene.setFill(Color.TRANSPARENT);
         AnchorPane title = (AnchorPane) scene.lookup("#mainTitleBar");
 
         primaryStage.setScene(scene);

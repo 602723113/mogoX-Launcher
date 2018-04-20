@@ -13,11 +13,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.zoyn.mogox.controller.Controller">
+<VBox prefHeight="400.0" prefWidth="640.0" style="-fx-background-radius: 10px;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.zoyn.mogox.controller.Controller">
     <children>
-      <AnchorPane fx:id="mainTitleBar" prefHeight="36.0" prefWidth="640.0" style="-fx-background-color: #DBDBDB;">
+      <AnchorPane fx:id="mainTitleBar" prefHeight="36.0" prefWidth="640.0" style="-fx-background-color: #DBDBDB; -fx-background-radius: 10px 10px 0 0; -fx-border-radius: 10px 10px 0 0;">
          <children>
-            <Button layoutX="8.0" layoutY="7.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="21.0" style="-fx-background-radius: 25; -fx-border-radius: 25; -fx-background-color: #ff6057;" textAlignment="CENTER">
+            <Button layoutX="8.0" layoutY="7.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="21.0" style="-fx-background-radius: 25px; -fx-border-radius: 25px; -fx-background-color: #ff6057;" textAlignment="CENTER">
                <font>
                   <Font size="8.0" />
                </font>
@@ -43,7 +43,7 @@
             </ImageView>
             <TextArea layoutX="61.0" layoutY="96.0" prefHeight="118.0" prefWidth="541.0" />
          </children></AnchorPane>
-      <AnchorPane prefHeight="133.0" prefWidth="640.0">
+      <AnchorPane fx:id="startGameBar" prefHeight="133.0" prefWidth="640.0" style="-fx-background-radius: 0 0 10px 10px; -fx-border-radius: 0 0 10px 10px;">
          <children>
                <Label layoutX="194.0" layoutY="20.0" text="账号:" />
                <TextField fx:id="accountField" layoutX="236.0" layoutY="16.0" />
