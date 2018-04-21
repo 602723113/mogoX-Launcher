@@ -2,13 +2,18 @@ package cc.zoyn.mogox.controller;
 
 import cc.zoyn.mogox.Launch;
 import cc.zoyn.mogox.Main;
+import cc.zoyn.mogox.util.DragUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.to2mbn.jmccc.option.JavaEnvironment;
 
 import java.io.IOException;
@@ -31,14 +36,16 @@ public class Controller {
     public Button closeButton;
     @FXML
     public Button minimizeButton;
+    @FXML
+    public ChoiceBox versionChoice;
 
     /**
      * 启动器关闭
      */
     @FXML
     protected void closeStage() {
+        stage.setOnCloseRequest(event -> Main.saveTemps());
         stage.close();
-        System.out.println("启动器关闭");
     }
 
     /**
@@ -69,18 +76,33 @@ public class Controller {
         if (javaPath == null || javaPath.isEmpty()) {
             javaPath = JavaEnvironment.current().getJavaPath().getAbsolutePath();
         }
-        Launch.launch("1.8.9", email, password, minecraftDirectory, javaPath);
+        Launch.launch(Main.getVersion(), email, password, minecraftDirectory, javaPath);
     }
 
     @FXML
     protected void loadOptionStage() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("option.fxml"));
+            Parent root = FXMLLoader.load(Main.class.getResource("fxml/option.fxml"));
             Stage optionStage = new Stage();
             optionStage.setTitle("mogoX 启动器 | 更多设置");
-            optionStage.setScene(new Scene(root, 441, 246));
+            optionStage.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root, 441, 246);
+            scene.setFill(Color.TRANSPARENT);
+            // 开启时进行自动配置
+            TextField javaDirectory = (TextField) scene.lookup("#javaDirectory");
+            javaDirectory.setText(Main.getJavaDirectory());
+            TextField minecraftDirectory = (TextField) scene.lookup("#minecraftDirectory");
+            minecraftDirectory.setText(Main.getMinecraftDirectory());
+
+            // 标题栏
+            AnchorPane anchorPane = (AnchorPane) scene.lookup("#optionTitleBar");
+            DragUtil.addDragListener(optionStage, anchorPane);
+
+            optionStage.setScene(scene);
             optionStage.setMaximized(false);
             optionStage.show();
+            Main.optionStage = optionStage;
         } catch (IOException e) {
             e.printStackTrace();
         }

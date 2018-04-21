@@ -39,7 +39,11 @@
         <ImageView fitHeight="80.0" fitWidth="89.0" layoutX="280.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../resource/logo.png" />
         </ImageView>
-        <TextArea layoutX="61.0" layoutY="96.0" prefHeight="118.0" prefWidth="541.0" />
+        <TextArea disable="true" editable="false" layoutX="61.0" layoutY="96.0" prefHeight="118.0" prefWidth="541.0" wrapText="true" />
+      <Label fx:id="information" alignment="CENTER" layoutX="76.0" layoutY="126.0" prefHeight="58.0" prefWidth="488.0" text="你好" textAlignment="CENTER">
+         <font>
+            <Font name="Microsoft YaHei UI Light" size="32.0" />
+         </font></Label>
     </AnchorPane>
     <AnchorPane fx:id="startGameBar" prefHeight="133.0" prefWidth="640.0" style="-fx-background-radius: 0 0 10px 10px; -fx-border-radius: 0 0 10px 10px;">
         <Label layoutX="194.0" layoutY="20.0" text="账号:" />
@@ -56,7 +60,7 @@
                 <Font name="System Italic" size="14.0" />
             </font>
         </Button>
-        <ChoiceBox layoutX="498.0" layoutY="53.0" prefHeight="23.0" prefWidth="80.0" />
+        <ChoiceBox fx:id="versionChoice" layoutX="498.0" layoutY="53.0" prefHeight="23.0" prefWidth="110.0" />
         <Label layoutX="440.0" layoutY="56.0" text="游戏版本:" />
     </AnchorPane>
 </VBox>

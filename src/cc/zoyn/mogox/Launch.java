@@ -1,5 +1,7 @@
 package cc.zoyn.mogox;
 
+import cc.zoyn.mogox.util.LogUtils;
+import org.apache.commons.logging.Log;
 import org.to2mbn.jmccc.auth.yggdrasil.YggdrasilAuthenticator;
 import org.to2mbn.jmccc.launch.Launcher;
 import org.to2mbn.jmccc.launch.LauncherBuilder;
@@ -9,6 +11,8 @@ import org.to2mbn.jmccc.option.*;
 import java.io.File;
 
 public class Launch {
+
+    private static LogUtils logInstance = LogUtils.getInstance(Launch.class);
 
     public static void launch(String version, String email, String password, String minecraftDirectory, String javaPath) {
         Launcher launcher = LauncherBuilder.buildDefault();
@@ -25,15 +29,15 @@ public class Launch {
             // 启动
             launcher.launch(option, new ProcessListener() {
                 public void onLog(String log) {
-                    System.out.println(log);
+                    logInstance.info(log);
                 }
 
                 public void onErrorLog(String log) {
-                    System.err.println(log);
+                    logInstance.error(log);
                 }
 
                 public void onExit(int code) {
-                    System.err.println("游戏进程退出，状态码：" + code);
+                    logInstance.info("游戏进程退出，状态码：" + code);
                 }
             });
             // launcher.launch(option);

@@ -20,7 +20,6 @@ public class CommonUtils {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-
     public static String getClientPath() {
         String filePath = "";
         URL url = Main.class.getProtectionDomain().getCodeSource().getLocation();
@@ -39,29 +38,6 @@ public class CommonUtils {
         File file = new File(filePath);
         filePath = file.getAbsolutePath();
         return filePath;
-    }
-
-    public static void saveJavaPath(String javaPath) {
-        File file = new File(getClientPath(), "config.json");
-        if (file.exists()) {
-
-        } else {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            JsonObject object = new JsonObject();
-            object.addProperty("javaPath", javaPath);
-            System.out.println(GSON.toJson(object));
-            try {
-                FileWriter writer = new FileWriter(file);
-                writer.write(object.toString());
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }
