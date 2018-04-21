@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -33,6 +34,12 @@ public class Main extends Application {
         // 为了使用css圆角, 所以背景需要透明色
         scene.setFill(Color.TRANSPARENT);
         AnchorPane title = (AnchorPane) scene.lookup("#mainTitleBar");
+
+        // 设置标题栏上的两个开关无选中效果
+        Button closeButton = (Button) scene.lookup("#closeButton");
+        Button minimizeButton = (Button) scene.lookup("#minimizeButton");
+        closeButton.setFocusTraversable(false);
+        minimizeButton.setFocusTraversable(false);
 
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("resource/icon.jpg")));

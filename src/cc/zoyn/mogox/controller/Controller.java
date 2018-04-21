@@ -25,8 +25,33 @@ public class Controller {
     public Button startButton;
     @FXML
     public Label information;
+    @FXML
     public AnchorPane mainTitleBar;
+    @FXML
+    public Button closeButton;
+    @FXML
+    public Button minimizeButton;
 
+    /**
+     * 启动器关闭
+     */
+    @FXML
+    protected void closeStage() {
+        stage.close();
+        System.out.println("启动器关闭");
+    }
+
+    /**
+     * 最小化，任务栏可见图标
+     */
+    @FXML
+    private void minimizeStage() {
+        stage.setIconified(true);
+    }
+
+    /**
+     * 开始游戏被单击
+     */
     @FXML
     protected void onStart() {
         String email = accountField.getText();

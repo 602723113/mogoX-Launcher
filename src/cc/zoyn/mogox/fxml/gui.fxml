@@ -14,54 +14,49 @@
 <?import javafx.scene.text.Font?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" style="-fx-background-radius: 10px;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.zoyn.mogox.controller.Controller">
-    <children>
-      <AnchorPane fx:id="mainTitleBar" prefHeight="36.0" prefWidth="640.0" style="-fx-background-color: #DBDBDB; -fx-background-radius: 10px 10px 0 0; -fx-border-radius: 10px 10px 0 0;">
-         <children>
-            <Button layoutX="8.0" layoutY="7.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="21.0" style="-fx-background-radius: 25px; -fx-border-radius: 25px; -fx-background-color: #ff6057;" textAlignment="CENTER">
-               <font>
-                  <Font size="8.0" />
-               </font>
-            </Button>
-            <Button layoutX="34.0" layoutY="8.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="21.0" style="-fx-background-radius: 25; -fx-border-radius: 25; -fx-background-color: #30c842;" textAlignment="CENTER" textOverrun="CLIP">
-               <font>
-                  <Font size="8.0" />
-               </font>
-            </Button>
-            <Label layoutX="266.0" layoutY="7.0" prefHeight="20.0" prefWidth="120.0" text="mogoX  启动器">
-               <font>
-                  <Font name="Microsoft YaHei UI Light" size="15.0" />
-               </font>
-            </Label>
-         </children></AnchorPane>
-        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="0.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Separator layoutX="9.0" layoutY="237.0" prefHeight="5.0" prefWidth="623.0" />
-            <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="280.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resource/logo.png" />
-               </image>
-            </ImageView>
-            <TextArea layoutX="61.0" layoutY="96.0" prefHeight="118.0" prefWidth="541.0" />
-         </children></AnchorPane>
-      <AnchorPane fx:id="startGameBar" prefHeight="133.0" prefWidth="640.0" style="-fx-background-radius: 0 0 10px 10px; -fx-border-radius: 0 0 10px 10px;">
-         <children>
-               <Label layoutX="194.0" layoutY="20.0" text="账号:" />
-               <TextField fx:id="accountField" layoutX="236.0" layoutY="16.0" />
-               <Label layoutX="194.0" layoutY="56.0" text="密码:" />
-               <PasswordField fx:id="passwordField" layoutX="236.0" layoutY="49.0" />
-               <Button fx:id="startButton" alignment="CENTER" layoutX="236.0" layoutY="84.0" mnemonicParsing="false" onMouseClicked="#onStart" text="开始游戏">
-               <font>
-                  <Font name="System Italic" size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="optionButton" alignment="CENTER" layoutX="320.0" layoutY="84.0" mnemonicParsing="false" onMouseClicked="#loadOptionStage" prefHeight="29.0" prefWidth="76.0" text="更多设置">
-               <font>
-                  <Font name="System Italic" size="14.0" />
-               </font>
-            </Button>
-            <ChoiceBox layoutX="498.0" layoutY="53.0" prefHeight="23.0" prefWidth="80.0" />
-            <Label layoutX="440.0" layoutY="56.0" text="游戏版本:" />
-         </children>
-      </AnchorPane>
-    </children>
+    <AnchorPane fx:id="mainTitleBar" prefHeight="36.0" prefWidth="640.0" style="-fx-background-color: #DBDBDB; -fx-background-radius: 10px 10px 0 0; -fx-border-radius: 10px 10px 0 0;">
+        <Button fx:id="closeButton" layoutX="6.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#closeStage" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 25px; -fx-border-radius: 25px; -fx-background-color: #ff6057;" textAlignment="CENTER">
+            <font>
+                <Font size="8.0" />
+            </font>
+        </Button>
+        <Button fx:id="minimizeButton" layoutX="30.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#minimizeStage" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 25; -fx-border-radius: 25; -fx-background-color: #30c842;" textAlignment="CENTER" textOverrun="CLIP">
+            <font>
+                <Font size="8.0" />
+            </font>
+        </Button>
+        <Label layoutX="266.0" layoutY="7.0" prefHeight="20.0" prefWidth="120.0" text="mogoX  启动器">
+            <font>
+                <Font name="Microsoft YaHei UI Light" size="15.0" />
+            </font>
+        </Label>
+        <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="241.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../resource/logo.png" />
+        </ImageView>
+    </AnchorPane>
+    <AnchorPane prefHeight="0.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
+        <Separator layoutX="9.0" layoutY="237.0" prefHeight="5.0" prefWidth="623.0" />
+        <ImageView fitHeight="80.0" fitWidth="89.0" layoutX="280.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../resource/logo.png" />
+        </ImageView>
+        <TextArea layoutX="61.0" layoutY="96.0" prefHeight="118.0" prefWidth="541.0" />
+    </AnchorPane>
+    <AnchorPane fx:id="startGameBar" prefHeight="133.0" prefWidth="640.0" style="-fx-background-radius: 0 0 10px 10px; -fx-border-radius: 0 0 10px 10px;">
+        <Label layoutX="194.0" layoutY="20.0" text="账号:" />
+        <TextField fx:id="accountField" layoutX="236.0" layoutY="16.0" />
+        <Label layoutX="194.0" layoutY="56.0" text="密码:" />
+        <PasswordField fx:id="passwordField" layoutX="236.0" layoutY="49.0" />
+        <Button fx:id="startButton" alignment="CENTER" layoutX="236.0" layoutY="84.0" mnemonicParsing="false" onMouseClicked="#onStart" text="开始游戏">
+            <font>
+                <Font name="System Italic" size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="optionButton" alignment="CENTER" layoutX="320.0" layoutY="84.0" mnemonicParsing="false" onMouseClicked="#loadOptionStage" prefHeight="29.0" prefWidth="76.0" text="更多设置">
+            <font>
+                <Font name="System Italic" size="14.0" />
+            </font>
+        </Button>
+        <ChoiceBox layoutX="498.0" layoutY="53.0" prefHeight="23.0" prefWidth="80.0" />
+        <Label layoutX="440.0" layoutY="56.0" text="游戏版本:" />
+    </AnchorPane>
 </VBox>
