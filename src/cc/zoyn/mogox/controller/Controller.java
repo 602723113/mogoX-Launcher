@@ -3,6 +3,8 @@ package cc.zoyn.mogox.controller;
 import cc.zoyn.mogox.Launch;
 import cc.zoyn.mogox.Main;
 import cc.zoyn.mogox.util.DragUtil;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,10 +19,12 @@ import javafx.stage.StageStyle;
 import org.to2mbn.jmccc.option.JavaEnvironment;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class Controller {
 
     private static Stage stage = Main.stage;
+    private static Stage optionStage;
 
     @FXML
     public TextField accountField;
@@ -44,7 +48,11 @@ public class Controller {
      */
     @FXML
     protected void closeStage() {
-        stage.setOnCloseRequest(event -> Main.saveTemps());
+        try {
+            Main.saveTemps();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         stage.close();
     }
 
@@ -71,36 +79,54 @@ public class Controller {
             alert.show();
             return;
         }
-        information.setText("稍等片刻, 马上就好~");
         String javaPath = Main.getJavaDirectory();
         if (javaPath == null || javaPath.isEmpty()) {
             javaPath = JavaEnvironment.current().getJavaPath().getAbsolutePath();
         }
+        if (!javaPath.contains("1.8.0")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("错误");
+            alert.setHeaderText(null);
+            alert.setContentText("检测到当前选中的Java版本不是1.8, 请进入 [更多设置] 选项进行更改!");
+            alert.show();
+            return;
+        }
+        information.setText("稍等片刻, 马上就好~");
         Launch.launch(Main.getVersion(), email, password, minecraftDirectory, javaPath);
     }
 
     @FXML
     protected void loadOptionStage() {
         try {
-            Parent root = FXMLLoader.load(Main.class.getResource("fxml/option.fxml"));
-            Stage optionStage = new Stage();
-            optionStage.setTitle("mogoX 启动器 | 更多设置");
-            optionStage.initStyle(StageStyle.TRANSPARENT);
+            if (optionStage == null) {
+                Parent root = FXMLLoader.load(Main.class.getResource("fxml/option.fxml"));
+                optionStage = new Stage();
+                optionStage.setTitle("mogoX 启动器 | 更多设置");
+                optionStage.initStyle(StageStyle.TRANSPARENT);
 
-            Scene scene = new Scene(root, 441, 246);
-            scene.setFill(Color.TRANSPARENT);
-            // 开启时进行自动配置
-            TextField javaDirectory = (TextField) scene.lookup("#javaDirectory");
-            javaDirectory.setText(Main.getJavaDirectory());
-            TextField minecraftDirectory = (TextField) scene.lookup("#minecraftDirectory");
-            minecraftDirectory.setText(Main.getMinecraftDirectory());
+                Scene scene = new Scene(root, 441, 246);
+                scene.setFill(Color.TRANSPARENT);
 
-            // 标题栏
-            AnchorPane anchorPane = (AnchorPane) scene.lookup("#optionTitleBar");
-            DragUtil.addDragListener(optionStage, anchorPane);
+                // 开启时进行自动配置
+                TextField javaDirectory = (TextField) scene.lookup("#javaDirectory");
+                javaDirectory.setText(Main.getJavaDirectory());
+                TextField minecraftDirectory = (TextField) scene.lookup("#minecraftDirectory");
+                minecraftDirectory.setText(Main.getMinecraftDirectory());
 
-            optionStage.setScene(scene);
-            optionStage.setMaximized(false);
+                // 内存设置监听
+                TextField maxMemory = (TextField) scene.lookup("#maxMemory");
+                maxMemory.setText(Main.getMaxMemory());
+                maxMemory.textProperty().addListener((observable, oldValue, newValue) -> Main.setMaxMemory(maxMemory.getText()));
+                TextField minMemory = (TextField) scene.lookup("#minMemory");
+                minMemory.setText(Main.getMinMemory());
+                minMemory.textProperty().addListener((observable, oldValue, newValue) -> Main.setMinMemory(minMemory.getText()));
+
+                // 标题栏
+                AnchorPane anchorPane = (AnchorPane) scene.lookup("#optionTitleBar");
+                DragUtil.addDragListener(optionStage, anchorPane);
+
+                optionStage.setScene(scene);
+            }
             optionStage.show();
             Main.optionStage = optionStage;
         } catch (IOException e) {

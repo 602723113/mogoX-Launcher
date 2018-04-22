@@ -1,5 +1,6 @@
 package cc.zoyn.mogox;
 
+import cc.zoyn.mogox.bean.LaunchOption;
 import cc.zoyn.mogox.util.CommonUtils;
 import cc.zoyn.mogox.util.DragUtil;
 import com.google.gson.Gson;
@@ -10,9 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -35,9 +34,11 @@ public class Main extends Application {
     public static Stage stage;
     private static String javaDirectory = JavaEnvironment.current().getJavaPath().getAbsolutePath();
     private static String minecraftDirectory;
-    private static String email = " ";
-    private static String password = " ";
-    private static String version = " ";
+    private static String email = "";
+    private static String password = "";
+    private static String version = "未找到版本!";
+    private static String maxMemory = "1024";
+    private static String minMemory = "0";
     public static Stage optionStage;
 
     @Override
@@ -74,11 +75,27 @@ public class Main extends Application {
                         (observable, oldValue, newValue) -> version = choice.getItems().get(newValue.intValue())
                 );
 
+        // 自动填入账号和密码
+        TextField accountField = (TextField) scene.lookup("#accountField");
+        accountField.setText(getEmail());
+        PasswordField passwordField = (PasswordField) scene.lookup("#passwordField");
+        passwordField.setText(getPassword());
+
+        // 当输入完后自动设置内存中的值
+        accountField.textProperty().addListener((observable, oldValue, newValue) -> Main.setEmail(accountField.getText()));
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> Main.setPassword(passwordField.getText()));
+
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("resource/icon.jpg")));
 
         DragUtil.addDragListener(primaryStage, title);
-        primaryStage.setOnCloseRequest(event -> System.out.println("测试..."));
+        primaryStage.setOnCloseRequest(event -> {
+            try {
+                saveTemps();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         primaryStage.show();
     }
 
@@ -96,15 +113,21 @@ public class Main extends Application {
                 int index;
                 byte[] bytes = new byte[1024];
                 while ((index = stream.read(bytes)) != -1) {
-                    builder.append(new String(bytes, 0, index, Charset.forName("utf8")));
+                    builder.append(new String(bytes, 0, index, Charset.defaultCharset()));
                 }
                 stream.close();
+                // 读取json数据
                 String json = builder.toString();
-                System.out.println(json);
-
-                JsonObject object = new JsonObject();
-                String a = gson.fromJson(json, String.class);
-                System.out.println(a);
+                // 反序列化
+                LaunchOption option = gson.fromJson(json, LaunchOption.class);
+                // 数据设置
+                setJavaDirectory(option.getJavaPath());
+                setMinecraftDirectory(option.getMinecraftDirectory());
+                setVersion(option.getVersion());
+                setEmail(option.getEmail());
+                setPassword(option.getPassword());
+                setMaxMemory(option.getMaxMemory());
+                setMinMemory(option.getMinMemory());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -113,11 +136,17 @@ public class Main extends Application {
             setJavaDirectory(JavaEnvironment.current().getJavaPath().getAbsolutePath());
             setMinecraftDirectory(CommonUtils.getClientPath() + File.separator + ".minecraft");
             setVersion(getMinecraftVersions().get(0));
-            saveTemps();
+            setEmail("");
+            setPassword("");
+            try {
+                saveTemps();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static void saveTemps() {
+    public static void saveTemps() throws IOException {
         File file = new File(CommonUtils.getClientPath(), "config.json");
         // 需要保存的json
         JsonObject object = new JsonObject();
@@ -126,18 +155,14 @@ public class Main extends Application {
         object.addProperty("email", getEmail());
         object.addProperty("password", getPassword());
         object.addProperty("version", getVersion());
-        if (file.exists()) {
-
-        } else {
-            try {
-                file.createNewFile();
-                FileWriter writer = new FileWriter(file);
-                writer.write(object.toString());
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        object.addProperty("maxMemory", getMaxMemory());
+        object.addProperty("minMemory", getMinMemory());
+        if (!file.exists()) {
+            file.createNewFile();
         }
+        FileWriter writer = new FileWriter(file);
+        writer.write(object.toString());
+        writer.close();
     }
 
     public static List<String> getMinecraftVersions() {
@@ -192,4 +217,19 @@ public class Main extends Application {
         Main.version = version;
     }
 
+    public static String getMaxMemory() {
+        return maxMemory;
+    }
+
+    public static void setMaxMemory(String maxMemory) {
+        Main.maxMemory = maxMemory;
+    }
+
+    public static String getMinMemory() {
+        return minMemory;
+    }
+
+    public static void setMinMemory(String minMemory) {
+        Main.minMemory = minMemory;
+    }
 }

@@ -23,6 +23,10 @@ public class OptionController {
     public Button javaChooser;
     @FXML
     public AnchorPane optionTitleBar;
+    @FXML
+    public TextField maxMemory;
+    @FXML
+    public TextField minMemory;
 
     /**
      * 综合设置关闭
@@ -58,11 +62,4 @@ public class OptionController {
         }
     }
 
-    public TextField getMinecraftDirectory() {
-        return minecraftDirectory;
-    }
-
-    public TextField getJavaDirectory() {
-        return javaDirectory;
-    }
 }
