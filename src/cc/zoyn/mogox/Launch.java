@@ -35,13 +35,17 @@ public class Launch {
 
             // 启动器最小化
             Main.stage.setIconified(true);
-            Main.optionStage.close();
+            // 防止用户没点开更多设置时, 启动器在调用null
+            if (Main.optionStage != null) {
+                Main.optionStage.close();
+            }
 
             // 启动
             launcher.launch(option, new ProcessListener() {
                 public void onLog(String log) {
                     System.out.println(log);
                 }
+
                 public void onErrorLog(String log) {
                     System.err.println(log);
                 }
@@ -83,5 +87,4 @@ public class Launch {
             alert.show();
         }
     }
-
 }
