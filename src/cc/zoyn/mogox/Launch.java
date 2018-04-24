@@ -27,11 +27,16 @@ public class Launch {
             option.setWindowSize(WindowSize.window(854, 480));
             // maytomo.vicp.cc
             option.setServerInfo(new ServerInfo("maytomo.vicp.cc", 25565));
-            option.commandlineVariables().put("version_type", "MogoX");
+            option.commandlineVariables().put("version_type", "mogo X");
             option.setJavaEnvironment(new JavaEnvironment(new File(javaPath)));
             option.setMaxMemory(Integer.valueOf(Main.getMaxMemory()));
             option.setMinMemory(Integer.valueOf(Main.getMinMemory()));
             System.out.println(option);
+
+            // 启动器最小化
+            Main.stage.setIconified(true);
+            Main.optionStage.close();
+
             // 启动
             launcher.launch(option, new ProcessListener() {
                 public void onLog(String log) {

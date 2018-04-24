@@ -3,6 +3,7 @@ package cc.zoyn.mogox.controller;
 import cc.zoyn.mogox.Launch;
 import cc.zoyn.mogox.Main;
 import cc.zoyn.mogox.util.DragUtil;
+import cc.zoyn.mogox.util.Java8Detector;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -83,7 +84,7 @@ public class Controller {
         if (javaPath == null || javaPath.isEmpty()) {
             javaPath = JavaEnvironment.current().getJavaPath().getAbsolutePath();
         }
-        if (!javaPath.contains("1.8.0")) {
+        if(!Java8Detector.isJava8(javaPath)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("错误");
             alert.setHeaderText(null);
