@@ -14,10 +14,4 @@ public class LogUtils {
         LOGGER.info(message);
     }
 
-    public static void main(String... args) {
-        String thing = args.length > 0 ? args[0] : "world";
-        LOGGER.info("Hello, {}!", thing);
-    }
-
-
 }

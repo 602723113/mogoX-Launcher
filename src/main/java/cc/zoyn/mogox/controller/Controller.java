@@ -110,7 +110,7 @@ public class Controller {
     protected void loadOptionStage() {
         try {
             if (optionStage == null) {
-                Parent root = FXMLLoader.load(Main.class.getResource("fxml/option.fxml"));
+                Parent root = FXMLLoader.load(Main.class.getResource("/option.fxml"));
                 optionStage = new Stage();
                 optionStage.setTitle("mogoX 启动器 | 更多设置");
                 optionStage.initStyle(StageStyle.TRANSPARENT);
