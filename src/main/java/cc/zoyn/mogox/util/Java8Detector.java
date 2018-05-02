@@ -1,8 +1,7 @@
 package cc.zoyn.mogox.util;
 
-import javafx.scene.control.Alert;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Objects;
 
 import static cc.zoyn.mogox.util.StreamUtils.readFromStream;

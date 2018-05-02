@@ -3,6 +3,7 @@ package cc.zoyn.mogox;
 import cc.zoyn.mogox.bean.LaunchOption;
 import cc.zoyn.mogox.util.CommonUtils;
 import cc.zoyn.mogox.util.DragUtil;
+import cc.zoyn.mogox.util.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -48,7 +49,10 @@ public class Main extends Application {
         // 配置文件检查
         checkIsFirstRun();
 
-        Parent root = FXMLLoader.load(getClass().getResource("fxml/gui.fxml"));
+        LogUtils.info("新Log测试...");
+        System.out.println("新Log测试");
+
+        Parent root = FXMLLoader.load(getClass().getResource("/gui.fxml"));
         primaryStage.setTitle("mogoX 启动器");
         // 标题栏设置
         primaryStage.initStyle(StageStyle.TRANSPARENT);
@@ -86,7 +90,7 @@ public class Main extends Application {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> Main.setPassword(passwordField.getText()));
 
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("resource/icon.jpg")));
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.jpg")));
 
         DragUtil.addDragListener(primaryStage, title);
         primaryStage.setOnCloseRequest(event -> {

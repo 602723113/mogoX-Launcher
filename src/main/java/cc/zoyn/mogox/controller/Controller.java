@@ -4,23 +4,19 @@ import cc.zoyn.mogox.Launch;
 import cc.zoyn.mogox.Main;
 import cc.zoyn.mogox.util.DragUtil;
 import cc.zoyn.mogox.util.Java8Detector;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.to2mbn.jmccc.option.JavaEnvironment;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 public class Controller {
 
@@ -43,6 +39,20 @@ public class Controller {
     public Button minimizeButton;
     @FXML
     public ChoiceBox versionChoice;
+    @FXML
+    public Label skinLable;
+    @FXML
+    public Label forumLabel;
+
+    @FXML
+    protected void forumLabelMouseEnter() {
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetY(3.0);
+        dropShadow.setColor(Color.color(0.4, 0.4, 0.4));
+
+        forumLabel.setEffect(dropShadow);
+        forumLabel.setCache(true);
+    }
 
     /**
      * 启动器关闭
@@ -84,7 +94,7 @@ public class Controller {
         if (javaPath == null || javaPath.isEmpty()) {
             javaPath = JavaEnvironment.current().getJavaPath().getAbsolutePath();
         }
-        if(!Java8Detector.isJava8(javaPath)) {
+        if (!Java8Detector.isJava8(javaPath)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("错误");
             alert.setHeaderText(null);

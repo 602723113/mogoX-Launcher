@@ -7,7 +7,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.to2mbn.jmccc.option.JavaEnvironment;
 
 import java.io.File;
 
