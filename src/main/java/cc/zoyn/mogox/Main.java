@@ -2,19 +2,15 @@ package cc.zoyn.mogox;
 
 import cc.zoyn.mogox.bean.LaunchOption;
 import cc.zoyn.mogox.util.CommonUtils;
-import cc.zoyn.mogox.util.DragUtil;
 import cc.zoyn.mogox.util.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -52,47 +48,47 @@ public class Main extends Application {
         LogUtils.info("新Log测试...");
         System.out.println("新Log测试");
 
-        Parent root = FXMLLoader.load(getClass().getResource("/gui.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/ui.fxml"));
         primaryStage.setTitle("mogoX 启动器");
         // 标题栏设置
         primaryStage.initStyle(StageStyle.TRANSPARENT);
-        Scene scene = new Scene(root, 638, 400);
+        Scene scene = new Scene(root, 800, 500);
         // 为了使用css圆角, 所以背景需要透明色
         scene.setFill(Color.TRANSPARENT);
-        AnchorPane title = (AnchorPane) scene.lookup("#mainTitleBar");
-
-        // 设置标题栏上的两个开关无选中效果
-        Button closeButton = (Button) scene.lookup("#closeButton");
-        Button minimizeButton = (Button) scene.lookup("#minimizeButton");
-        closeButton.setFocusTraversable(false);
-        minimizeButton.setFocusTraversable(false);
-
-        // 版本选择器
-        ChoiceBox<String> choice = (ChoiceBox<String>) scene.lookup("#versionChoice");
-        choice.setItems(FXCollections.observableArrayList(getMinecraftVersions()));
-        choice.setValue(getVersion());
-        choice.setTooltip(new Tooltip("你可以在此设定你的版本~"));
-        // 选中时同时设定version
-        choice.getSelectionModel()
-                .selectedIndexProperty()
-                .addListener(
-                        (observable, oldValue, newValue) -> version = choice.getItems().get(newValue.intValue())
-                );
-
-        // 自动填入账号和密码
-        TextField accountField = (TextField) scene.lookup("#accountField");
-        accountField.setText(getEmail());
-        PasswordField passwordField = (PasswordField) scene.lookup("#passwordField");
-        passwordField.setText(getPassword());
-
-        // 当输入完后自动设置内存中的值
-        accountField.textProperty().addListener((observable, oldValue, newValue) -> Main.setEmail(accountField.getText()));
-        passwordField.textProperty().addListener((observable, oldValue, newValue) -> Main.setPassword(passwordField.getText()));
+//        AnchorPane title = (AnchorPane) scene.lookup("#mainTitleBar");
+//
+//        // 设置标题栏上的两个开关无选中效果
+//        Button closeButton = (Button) scene.lookup("#closeButton");
+//        Button minimizeButton = (Button) scene.lookup("#minimizeButton");
+//        closeButton.setFocusTraversable(false);
+//        minimizeButton.setFocusTraversable(false);
+//
+//        // 版本选择器
+//        ChoiceBox<String> choice = (ChoiceBox<String>) scene.lookup("#versionChoice");
+//        choice.setItems(FXCollections.observableArrayList(getMinecraftVersions()));
+//        choice.setValue(getVersion());
+//        choice.setTooltip(new Tooltip("你可以在此设定你的版本~"));
+//        // 选中时同时设定version
+//        choice.getSelectionModel()
+//                .selectedIndexProperty()
+//                .addListener(
+//                        (observable, oldValue, newValue) -> version = choice.getItems().get(newValue.intValue())
+//                );
+//
+//        // 自动填入账号和密码
+//        TextField accountField = (TextField) scene.lookup("#accountField");
+//        accountField.setText(getEmail());
+//        PasswordField passwordField = (PasswordField) scene.lookup("#passwordField");
+//        passwordField.setText(getPassword());
+//
+//        // 当输入完后自动设置内存中的值
+//        accountField.textProperty().addListener((observable, oldValue, newValue) -> Main.setEmail(accountField.getText()));
+//        passwordField.textProperty().addListener((observable, oldValue, newValue) -> Main.setPassword(passwordField.getText()));
 
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.jpg")));
 
-        DragUtil.addDragListener(primaryStage, title);
+//        DragUtil.addDragListener(primaryStage, title);
         primaryStage.setOnCloseRequest(event -> {
             try {
                 saveTemps();
