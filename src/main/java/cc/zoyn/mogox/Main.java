@@ -2,16 +2,21 @@ package cc.zoyn.mogox;
 
 import cc.zoyn.mogox.bean.LaunchOption;
 import cc.zoyn.mogox.util.CommonUtils;
-import cc.zoyn.mogox.util.LogUtils;
+import cc.zoyn.mogox.util.DragUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.to2mbn.jmccc.option.JavaEnvironment;
@@ -37,6 +42,7 @@ public class Main extends Application {
     private static String maxMemory = "1024";
     private static String minMemory = "0";
     public static Stage optionStage;
+    private static Font fangZhengZhunYuan;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -44,9 +50,7 @@ public class Main extends Application {
 
         // 配置文件检查
         checkIsFirstRun();
-
-        LogUtils.info("新Log测试...");
-        System.out.println("新Log测试");
+        fangZhengZhunYuan = Font.loadFont(getClass().getResourceAsStream("/FangZhengZhunYuanJianTi.tff"), 18);
 
         Parent root = FXMLLoader.load(getClass().getResource("/ui.fxml"));
         primaryStage.setTitle("mogoX 启动器");
@@ -55,13 +59,13 @@ public class Main extends Application {
         Scene scene = new Scene(root, 800, 500);
         // 为了使用css圆角, 所以背景需要透明色
         scene.setFill(Color.TRANSPARENT);
-//        AnchorPane title = (AnchorPane) scene.lookup("#mainTitleBar");
+        AnchorPane header = (AnchorPane) scene.lookup("#header");
 //
-//        // 设置标题栏上的两个开关无选中效果
-//        Button closeButton = (Button) scene.lookup("#closeButton");
-//        Button minimizeButton = (Button) scene.lookup("#minimizeButton");
-//        closeButton.setFocusTraversable(false);
-//        minimizeButton.setFocusTraversable(false);
+        // 设置标题栏上的两个开关无选中效果
+        Button closeButton = (Button) scene.lookup("#closeButton");
+        Button minimizeButton = (Button) scene.lookup("#minimizeButton");
+        closeButton.setFocusTraversable(false);
+        minimizeButton.setFocusTraversable(false);
 //
 //        // 版本选择器
 //        ChoiceBox<String> choice = (ChoiceBox<String>) scene.lookup("#versionChoice");
@@ -75,11 +79,11 @@ public class Main extends Application {
 //                        (observable, oldValue, newValue) -> version = choice.getItems().get(newValue.intValue())
 //                );
 //
-//        // 自动填入账号和密码
-//        TextField accountField = (TextField) scene.lookup("#accountField");
-//        accountField.setText(getEmail());
-//        PasswordField passwordField = (PasswordField) scene.lookup("#passwordField");
-//        passwordField.setText(getPassword());
+        // 自动填入账号和密码
+        JFXTextField accountField = (JFXTextField) scene.lookup("#accountField");
+        accountField.setText(getEmail());
+        JFXPasswordField passwordField = (JFXPasswordField) scene.lookup("#passwordField");
+        passwordField.setText(getPassword());
 //
 //        // 当输入完后自动设置内存中的值
 //        accountField.textProperty().addListener((observable, oldValue, newValue) -> Main.setEmail(accountField.getText()));
@@ -88,7 +92,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.jpg")));
 
-//        DragUtil.addDragListener(primaryStage, title);
+        DragUtil.addDragListener(primaryStage, header);
         primaryStage.setOnCloseRequest(event -> {
             try {
                 saveTemps();
