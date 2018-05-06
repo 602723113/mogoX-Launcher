@@ -1,14 +1,20 @@
 package cc.zoyn.mogox.controller;
 
+import cc.zoyn.mogox.Main;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Paint;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MainUIController {
+
+    private static Stage stage = Main.stage;
 
     public JFXButton registerButton;
     public JFXButton forgePasswordButton;
@@ -17,24 +23,27 @@ public class MainUIController {
     public AnchorPane header;
     public JFXTextField accountField;
     public JFXPasswordField passwordField;
+    public WebView mainWebView;
+    public WebView serverStatusWebView;
 
+    /**
+     * 启动器关闭
+     */
     @FXML
-    protected void onRegisterButtonMouseEnter() {
-        registerButton.setTextFill(Paint.valueOf("#ededed"));
+    protected void closeStage() {
+        try {
+            Main.saveTemps();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.close();
     }
 
+    /**
+     * 最小化，任务栏可见图标
+     */
     @FXML
-    protected void onRegisterButtonMouseExit() {
-        registerButton.setTextFill(Paint.valueOf("#a8a8a8"));
-    }
-
-    @FXML
-    protected void onForgePasswordButtonMouseEnter() {
-        forgePasswordButton.setTextFill(Paint.valueOf("#ededed"));
-    }
-
-    @FXML
-    protected void onForgePasswordButtonMouseExit() {
-        forgePasswordButton.setTextFill(Paint.valueOf("#a8a8a8"));
+    private void minimizeStage() {
+        stage.setIconified(true);
     }
 }

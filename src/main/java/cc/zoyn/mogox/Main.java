@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.to2mbn.jmccc.option.JavaEnvironment;
@@ -34,6 +34,7 @@ import java.util.Objects;
 public class Main extends Application {
 
     public static Stage stage;
+    private static String userName = "null";
     private static String javaDirectory = JavaEnvironment.current().getJavaPath().getAbsolutePath();
     private static String minecraftDirectory;
     private static String email = "";
@@ -42,7 +43,19 @@ public class Main extends Application {
     private static String maxMemory = "1024";
     private static String minMemory = "0";
     public static Stage optionStage;
-    private static Font fangZhengZhunYuan;
+    // 隐藏Scrollbar的css位置
+    private static String HIDE_SCROLLBAR_LOCATION = "hideScrollbar.css";
+    private static boolean firstRun = true;
+    private static final String MAIN_URL = "http://www.pintvc.com/Launcher/index.php";
+    private static final String STATUS_URL = "http://www.pintvc.com/Launcher/status.php";
+
+    static {
+        try {
+            HIDE_SCROLLBAR_LOCATION = Main.class.getResource("/hideScrollbar.css").toURI().toURL().toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -50,16 +63,15 @@ public class Main extends Application {
 
         // 配置文件检查
         checkIsFirstRun();
-        fangZhengZhunYuan = Font.loadFont(getClass().getResourceAsStream("/FangZhengZhunYuanJianTi.tff"), 18);
 
         Parent root = FXMLLoader.load(getClass().getResource("/ui.fxml"));
         primaryStage.setTitle("mogoX 启动器");
         // 标题栏设置
         primaryStage.initStyle(StageStyle.TRANSPARENT);
-        Scene scene = new Scene(root, 800, 500);
+        Scene scene = new Scene(root, 865, 566);
         // 为了使用css圆角, 所以背景需要透明色
         scene.setFill(Color.TRANSPARENT);
-        AnchorPane header = (AnchorPane) scene.lookup("#header");
+        AnchorPane header = (AnchorPane) scene.lookup("#mainAnchorPane");
 //
         // 设置标题栏上的两个开关无选中效果
         Button closeButton = (Button) scene.lookup("#closeButton");
@@ -84,10 +96,24 @@ public class Main extends Application {
         accountField.setText(getEmail());
         JFXPasswordField passwordField = (JFXPasswordField) scene.lookup("#passwordField");
         passwordField.setText(getPassword());
-//
-//        // 当输入完后自动设置内存中的值
-//        accountField.textProperty().addListener((observable, oldValue, newValue) -> Main.setEmail(accountField.getText()));
-//        passwordField.textProperty().addListener((observable, oldValue, newValue) -> Main.setPassword(passwordField.getText()));
+
+        // 当输入完后自动设置内存中的值
+        accountField.textProperty().addListener((observable, oldValue, newValue) -> Main.setEmail(accountField.getText()));
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> Main.setPassword(passwordField.getText()));
+
+        // WebView设置
+        WebView mainWebView = (WebView) scene.lookup("#mainWebView");
+        WebView serverStatusWebView = (WebView) scene.lookup("#serverStatusWebView");
+        // 读取 + 隐藏滚动条
+        if (isFirstRun()) {
+            mainWebView.getEngine().load(MAIN_URL);
+        } else {
+            mainWebView.getEngine().load(MAIN_URL + "?player=" + getUserName());
+        }
+        mainWebView.getEngine().setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
+        serverStatusWebView.getEngine().load(STATUS_URL);
+        serverStatusWebView.getEngine().setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
+
 
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.jpg")));
@@ -111,6 +137,8 @@ public class Main extends Application {
         File file = new File(CommonUtils.getClientPath(), "config.json");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (file.exists()) {
+            // 设置第一次运行变量
+            firstRun = false;
             try {
                 StringBuilder builder = new StringBuilder();
                 FileInputStream stream = new FileInputStream(file);
@@ -132,6 +160,7 @@ public class Main extends Application {
                 setPassword(option.getPassword());
                 setMaxMemory(option.getMaxMemory());
                 setMinMemory(option.getMinMemory());
+                setUserName(option.getUserName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -161,6 +190,7 @@ public class Main extends Application {
         object.addProperty("version", getVersion());
         object.addProperty("maxMemory", getMaxMemory());
         object.addProperty("minMemory", getMinMemory());
+        object.addProperty("userName", getUserName());
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -235,5 +265,17 @@ public class Main extends Application {
 
     public static void setMinMemory(String minMemory) {
         Main.minMemory = minMemory;
+    }
+
+    public static boolean isFirstRun() {
+        return firstRun;
+    }
+
+    public static String getUserName() {
+        return userName;
+    }
+
+    public static void setUserName(String userName) {
+        Main.userName = userName;
     }
 }

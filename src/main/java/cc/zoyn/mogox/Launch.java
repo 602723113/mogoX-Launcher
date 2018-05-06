@@ -23,7 +23,15 @@ public class Launch {
 
         LaunchOption option = null;
         try {
-            option = new LaunchOption(version, YggdrasilAuthenticator.password(email, password), new MinecraftDirectory(minecraftDirectory));
+            System.out.println(option);
+
+            option = new LaunchOption(version, YggdrasilAuthenticator.password(email, password, gameProfiles -> {
+                // 保存用户名, 用于主页显示
+                if (gameProfiles.length != 0) {
+                    Main.setUserName(gameProfiles[0].getName());
+                }
+                return gameProfiles[0];
+            }), new MinecraftDirectory(minecraftDirectory));
             option.setWindowSize(WindowSize.window(854, 480));
             // maytomo.vicp.cc
             option.setServerInfo(new ServerInfo("maytomo.vicp.cc", 25565));
@@ -31,8 +39,6 @@ public class Launch {
             option.setJavaEnvironment(new JavaEnvironment(new File(javaPath)));
             option.setMaxMemory(Integer.valueOf(Main.getMaxMemory()));
             option.setMinMemory(Integer.valueOf(Main.getMinMemory()));
-            System.out.println(option);
-
             // 启动器最小化
             Main.stage.setIconified(true);
             // 防止用户没点开更多设置时, 启动器在调用null

@@ -9,6 +9,7 @@ public class LaunchOption {
     private String version;
     private String maxMemory;
     private String minMemory;
+    private String userName;
 
     public String getMinecraftDirectory() {
         return minecraftDirectory;
@@ -64,5 +65,13 @@ public class LaunchOption {
 
     public void setMinMemory(String minMemory) {
         this.minMemory = minMemory;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
