@@ -44,7 +44,7 @@
                         </Label>
                     </children>
                 </AnchorPane>
-                <Label layoutX="76.0" layoutY="90.0" text="Hi~" textFill="WHITE">
+                <Label fx:id="welcomeText" layoutX="76.0" layoutY="90.0" text="Hi~" textFill="WHITE">
                     <font>
                         <Font name="Microsoft YaHei" size="17.0"/>
                     </font>
@@ -62,9 +62,10 @@
         <AnchorPane layoutX="200.0" layoutY="21.0" prefHeight="42.0" prefWidth="625.0"
                     style="-fx-background-color: #3f8cbb; -fx-background-radius: 0 10px 0 0; -fx-border-radius: 0 10px 0 0;">
             <children>
-                <GridPane alignment="CENTER" layoutX="561.0" layoutY="6.0" prefHeight="31.0" prefWidth="53.0">
+                <GridPane alignment="CENTER" layoutX="528.0" layoutY="6.0" prefHeight="31.0" prefWidth="86.0">
 
                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
                         <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                     </columnConstraints>
@@ -75,7 +76,15 @@
                         <Button fx:id="closeButton" mnemonicParsing="false" onMouseClicked="#closeStage"
                                 prefHeight="20.0" prefWidth="20.0"
                                 style="-fx-background-radius: 25px; -fx-border-radius: 25px; -fx-background-color: #ff6057;"
-                                textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="1">
+                                textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="2">
+                            <font>
+                                <Font size="8.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="consoleButton" mnemonicParsing="false" onMouseClicked="#showConsoleStage"
+                                prefHeight="20.0" prefWidth="20.0"
+                                style="-fx-background-radius: 25; -fx-border-radius: 25; -fx-background-color: #a8a8a8;"
+                                textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.columnIndex="1">
                             <font>
                                 <Font size="8.0"/>
                             </font>

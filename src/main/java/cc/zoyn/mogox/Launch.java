@@ -17,21 +17,12 @@ import java.io.StringWriter;
 
 public class Launch {
 
-
     public static void launch(String version, String email, String password, String minecraftDirectory, String javaPath) {
         Launcher launcher = LauncherBuilder.buildDefault();
 
-        LaunchOption option = null;
+        LaunchOption option;
         try {
-            System.out.println(option);
-
-            option = new LaunchOption(version, YggdrasilAuthenticator.password(email, password, gameProfiles -> {
-                // 保存用户名, 用于主页显示
-                if (gameProfiles.length != 0) {
-                    Main.setUserName(gameProfiles[0].getName());
-                }
-                return gameProfiles[0];
-            }), new MinecraftDirectory(minecraftDirectory));
+            option = new LaunchOption(version, YggdrasilAuthenticator.password(email, password), new MinecraftDirectory(minecraftDirectory));
             option.setWindowSize(WindowSize.window(854, 480));
             // maytomo.vicp.cc
             option.setServerInfo(new ServerInfo("maytomo.vicp.cc", 25565));
@@ -49,6 +40,12 @@ public class Launch {
             // 启动
             launcher.launch(option, new ProcessListener() {
                 public void onLog(String log) {
+                    // 保存用户名, 用于主页显示
+                    if (log.contains("Setting user:")) {
+                        String name = log.split("Setting user:")[1];
+                        System.out.println(name);
+                        Main.setUserName(name);
+                    }
                     System.out.println(log);
                 }
 

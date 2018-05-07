@@ -3,28 +3,39 @@ package cc.zoyn.mogox;
 import cc.zoyn.mogox.bean.LaunchOption;
 import cc.zoyn.mogox.util.CommonUtils;
 import cc.zoyn.mogox.util.DragUtil;
+import cc.zoyn.mogox.util.Java8Detector;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.to2mbn.jmccc.option.JavaEnvironment;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLAnchorElement;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +45,7 @@ import java.util.Objects;
 public class Main extends Application {
 
     public static Stage stage;
+    private static Stage consoleStage;
     private static String userName = "null";
     private static String javaDirectory = JavaEnvironment.current().getJavaPath().getAbsolutePath();
     private static String minecraftDirectory;
@@ -46,6 +58,7 @@ public class Main extends Application {
     // 隐藏Scrollbar的css位置
     private static String HIDE_SCROLLBAR_LOCATION = "hideScrollbar.css";
     private static boolean firstRun = true;
+    // http://www.pintvc.com/Launcher/index.php
     private static final String MAIN_URL = "http://www.pintvc.com/Launcher/index.php";
     private static final String STATUS_URL = "http://www.pintvc.com/Launcher/status.php";
 
@@ -63,6 +76,10 @@ public class Main extends Application {
 
         // 配置文件检查
         checkIsFirstRun();
+
+        // 读取ConsoleStage
+        loadConsoleStage();
+        System.out.println("啦啦啦");
 
         Parent root = FXMLLoader.load(getClass().getResource("/ui.fxml"));
         primaryStage.setTitle("mogoX 启动器");
@@ -91,6 +108,12 @@ public class Main extends Application {
 //                        (observable, oldValue, newValue) -> version = choice.getItems().get(newValue.intValue())
 //                );
 //
+
+        if (!getUserName().equals("null")) {
+            Label label = (Label) scene.lookup("#welcomeText");
+            label.setText("Hi~" + getUserName());
+        }
+
         // 自动填入账号和密码
         JFXTextField accountField = (JFXTextField) scene.lookup("#accountField");
         accountField.setText(getEmail());
@@ -111,9 +134,73 @@ public class Main extends Application {
             mainWebView.getEngine().load(MAIN_URL + "?player=" + getUserName());
         }
         mainWebView.getEngine().setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
-        serverStatusWebView.getEngine().load(STATUS_URL);
-        serverStatusWebView.getEngine().setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
+        mainWebView.getEngine().setJavaScriptEnabled(true);
+//        mainWebView.getEngine().setOnAlert(event -> {
+//            System.out.println(event.getData());
+//        });
 
+        WebEngine serverStatusWebEngine = serverStatusWebView.getEngine();
+        serverStatusWebEngine.setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
+        serverStatusWebEngine.setJavaScriptEnabled(true);
+        serverStatusWebView.setContextMenuEnabled(false);
+        // 链接跳转
+        serverStatusWebEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+//            System.out.println(newValue);
+            if (newValue == Worker.State.SUCCEEDED) {
+                if (serverStatusWebEngine.getLocation().startsWith(STATUS_URL)) {
+                    NodeList nodeList = serverStatusWebEngine.getDocument().getElementsByTagName("a");
+                    for (int i = 0; i < nodeList.getLength(); i++) {
+                        Node node = nodeList.item(i);
+                        EventTarget eventTarget = (EventTarget) node;
+                        eventTarget.addEventListener("click", evt -> {
+                            EventTarget target = evt.getCurrentTarget();
+                            HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
+                            String href = anchorElement.getHref();
+                            //handle opening URL outside JavaFX WebView
+                            openURLByDefaultBrowser(href);
+//                            System.out.println(href);
+                            evt.preventDefault();
+                        }, false);
+                    }
+                }
+            }
+        });
+        serverStatusWebEngine.load(STATUS_URL);
+        serverStatusWebEngine.setOnAlert(event -> {
+            String data = event.getData();
+//            System.out.println(data);
+            if (data != null) {
+                // 开始游戏操作
+                if (data.startsWith("[LOGIN]")) {
+                    String version = data.replaceAll("\\[LOGIN]", "");
+                    String email = accountField.getText();
+                    String password = passwordField.getText();
+                    String minecraftDirectory = Main.getMinecraftDirectory();
+                    if (email.isEmpty() || password.isEmpty()) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("信息");
+                        alert.setContentText("账号或密码不能为空!");
+                        alert.show();
+                        return;
+                    }
+                    String javaPath = Main.getJavaDirectory();
+                    if (javaPath == null || javaPath.isEmpty()) {
+                        javaPath = JavaEnvironment.current().getJavaPath().getAbsolutePath();
+                    }
+                    if (!Java8Detector.isJava8(javaPath)) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("错误");
+                        alert.setHeaderText(null);
+                        alert.setContentText("检测到当前选中的Java版本不是1.8, 请进入 [更多设置] 选项进行更改!");
+                        alert.show();
+                        return;
+                    }
+                    // 设置使用的版本
+                    setVersion(version);
+                    Launch.launch(version, email, password, minecraftDirectory, javaPath);
+                }
+            }
+        });
 
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.jpg")));
@@ -211,6 +298,46 @@ public class Main extends Application {
         return versions;
     }
 
+    /**
+     * 打开默认浏览器访问页面
+     */
+    public static void openURLByDefaultBrowser(String url) {
+        try {
+            URI uri = new URI(url);
+            if (Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                //获取系统默认浏览器打开链接
+                Desktop.getDesktop().browse(uri);
+                return;
+            }
+            System.out.println("[ERROR]当前系统无法支持打开浏览器");
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 读取consoleStage
+     */
+    private Stage loadConsoleStage() {
+        if (consoleStage == null) {
+            consoleStage = new Stage();
+            try {
+                Parent root = FXMLLoader.load(Main.class.getResource("/log.fxml"));
+                Scene scene = new Scene(root, 450, 300);
+                TextArea console = (TextArea) scene.lookup("#logTextArea");
+                // 读取并设置启动日志
+                PrintStream ps = new PrintStream(new Console(console));
+                System.setOut(ps);
+                System.setErr(ps);
+                consoleStage.setTitle("启动器日志");
+                consoleStage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return consoleStage;
+    }
+
     public static String getJavaDirectory() {
         return javaDirectory;
     }
@@ -277,5 +404,25 @@ public class Main extends Application {
 
     public static void setUserName(String userName) {
         Main.userName = userName;
+    }
+
+    public static Stage getConsoleStage() {
+        return consoleStage;
+    }
+
+    public class Console extends OutputStream {
+        private TextArea console;
+
+        public Console(TextArea console) {
+            this.console = console;
+        }
+
+        public void appendText(String valueOf) {
+            Platform.runLater(() -> console.appendText(valueOf));
+        }
+
+        public void write(int b) {
+            appendText(String.valueOf((char) b));
+        }
     }
 }

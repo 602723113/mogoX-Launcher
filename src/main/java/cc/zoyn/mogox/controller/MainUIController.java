@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -25,6 +26,8 @@ public class MainUIController {
     public JFXPasswordField passwordField;
     public WebView mainWebView;
     public WebView serverStatusWebView;
+    public Button consoleButton;
+    public Label welcomeText;
 
     /**
      * 启动器关闭
@@ -37,13 +40,19 @@ public class MainUIController {
             e.printStackTrace();
         }
         stage.close();
+        Main.getConsoleStage().close();
     }
 
     /**
      * 最小化，任务栏可见图标
      */
     @FXML
-    private void minimizeStage() {
+    protected void minimizeStage() {
         stage.setIconified(true);
+    }
+
+    @FXML
+    protected void showConsoleStage() {
+        Main.getConsoleStage().show();
     }
 }
