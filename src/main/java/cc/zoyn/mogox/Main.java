@@ -109,6 +109,7 @@ public class Main extends Application {
 //                );
 //
 
+        // 欢迎信息
         if (!getUserName().equals("null")) {
             Label label = (Label) scene.lookup("#welcomeText");
             label.setText("Hi~" + getUserName());
@@ -133,11 +134,30 @@ public class Main extends Application {
         } else {
             mainWebView.getEngine().load(MAIN_URL + "?player=" + getUserName());
         }
-        mainWebView.getEngine().setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
-        mainWebView.getEngine().setJavaScriptEnabled(true);
-//        mainWebView.getEngine().setOnAlert(event -> {
-//            System.out.println(event.getData());
-//        });
+        WebEngine mainWebViewEngine = mainWebView.getEngine();
+        mainWebViewEngine.setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
+        mainWebViewEngine.setJavaScriptEnabled(true);
+        // 链接跳转
+        mainWebViewEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                if (mainWebViewEngine.getLocation().startsWith(MAIN_URL)) {
+                    NodeList nodeList = mainWebViewEngine.getDocument().getElementsByTagName("a");
+                    for (int i = 0; i < nodeList.getLength(); i++) {
+                        Node node = nodeList.item(i);
+                        EventTarget eventTarget = (EventTarget) node;
+                        eventTarget.addEventListener("click", evt -> {
+                            EventTarget target = evt.getCurrentTarget();
+                            HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
+                            String href = anchorElement.getHref();
+                            //handle opening URL outside JavaFX WebView
+                            openURLByDefaultBrowser(href);
+//                            System.out.println(href);
+                            evt.preventDefault();
+                        }, false);
+                    }
+                }
+            }
+        });
 
         WebEngine serverStatusWebEngine = serverStatusWebView.getEngine();
         serverStatusWebEngine.setUserStyleSheetLocation(HIDE_SCROLLBAR_LOCATION);
