@@ -26,8 +26,8 @@ public class CommonUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // 可执行jar包运行的结果里包含".jar"
-        if (filePath.endsWith(".jar")) {
+        // 可执行应用程序运行的结果里包含".exe"
+        if (filePath.endsWith(".exe")) {
             // 获取jar包所在目录
             filePath = filePath.substring(0, filePath.lastIndexOf("/") + 1);
         }

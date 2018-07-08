@@ -1,13 +1,11 @@
 package cc.zoyn.mogox.controller;
 
 import cc.zoyn.mogox.Main;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
@@ -17,11 +15,8 @@ public class MainUIController {
 
     private static Stage stage = Main.stage;
 
-    public JFXButton registerButton;
-    public JFXButton forgePasswordButton;
     public Button closeButton;
     public Button minimizeButton;
-    public AnchorPane header;
     public JFXTextField accountField;
     public JFXPasswordField passwordField;
     public WebView mainWebView;
